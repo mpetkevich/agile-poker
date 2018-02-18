@@ -18,9 +18,29 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
+            $table->unsignedInteger('room')->unsigned()->default(0);
+
+            /**
+             * 0 - user
+             * 100 - admin
+             */
+            $table->unsignedInteger('role')->unsigned()->default(0);
+
             $table->rememberToken();
             $table->timestamps();
         });
+
+        Schema::create('rooms', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+        });
+
+        Schema::create('votes', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('user')->unsigned();
+            $table->unsignedInteger('vote')->unsigned();
+        });
+
     }
 
     /**
