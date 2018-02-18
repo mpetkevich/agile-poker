@@ -66,6 +66,28 @@
 
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-4">
+                                    <label>
+                                        <img src="{!! captcha_url() !!}" alt="captcha">
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group{{ $errors->has('captcha') ? ' has-error' : '' }}">
+                                <label class="col-md-4 control-label">Captcha</label>
+
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" name="captcha" autocomplete="off">
+
+                                    @if ($errors->has('captcha'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('captcha') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-6 col-md-offset-4">
                                     <button type="submit" class="btn btn-primary">
                                         Register
                                     </button>
@@ -81,12 +103,12 @@
     <script type="text/javascript">
 
 
-        $(".btn-refresh").click(function(){
+        $(".btn-refresh").click(function () {
             $.ajax({
-                type:'GET',
-                url:'/refresh_captcha',
+                type: 'GET',
+                url: '/refresh_captcha',
 
-                success:function(data){
+                success: function (data) {
 
                     $(".captcha span").html(data.captcha);
 
