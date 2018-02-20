@@ -21,5 +21,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/rooms', 'RoomController@index')->name('rooms');
+
+Route::get('rooms/{id}/work', 'RoomController@work')->name('rooms.work');
 
 Route::get('refresh_captcha', 'Auth\LoginController@refreshCaptcha')->name('refresh_captcha');

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Room;
 use Illuminate\Http\Request;
 
-class HomeController extends Controller
+class RoomController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -24,7 +24,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+
+        return view('rooms')->with('rooms', Room::all());
     }
 
 //    /**
