@@ -48,23 +48,15 @@ class HomeController extends Controller
 
     public function myCaptchaPost(Request $request)
     {
-
-        request()->validate([
-
-            'email' => 'required|email',
-
-            'password' => 'required',
-
-            'captcha' => 'required|captcha'
-
-        ],
-
-            ['captcha.captcha' => 'Invalid captcha code.']);
-
-        dd("You are here :) .");
-
+        request()->validate(
+            [
+                'email' => 'required|email',
+                'password' => 'required',
+                'captcha' => 'required|captcha'
+            ],
+            ['captcha.captcha' => 'Invalid captcha code.']
+        );
     }
-
 
     /**
      * Create a new controller instance.

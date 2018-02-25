@@ -5,7 +5,7 @@ export default class PageContent extends React.PureComponent{
     render(){
 
         let votes = [];
-        for (let i = 0; i <= 10; i++) {
+        for (let i = 1; i <= 10; i++) {
             votes.push( <div key={i} className="col-md-3">
                 <button className="btn btn-default voteButton" >{i}</button>
             </div>);

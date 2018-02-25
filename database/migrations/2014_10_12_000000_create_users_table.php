@@ -36,9 +36,11 @@ class CreateUsersTable extends Migration
 
         Schema::create('votes', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('user')->unsigned();
+            $table->unsignedInteger('user_id')->unsigned();
             $table->unsignedInteger('vote')->unsigned();
-            $table->unsignedInteger('room')->unsigned();
+            $table->unsignedInteger('room_id')->unsigned();
+            $table->unique(['user_id','room_id'],'idx_user_room');
+            $table->index(['room_id'],'idx_room');
         });
 
     }

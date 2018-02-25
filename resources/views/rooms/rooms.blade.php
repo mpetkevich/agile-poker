@@ -9,7 +9,11 @@
                 <div class="panel-body">
                     <ul class="list-group">
                         @foreach ($rooms as $room)
-                            <li class="list-group-item"> {{ $room->name }}</li>
+                            <li class="list-group-item">
+                                <a href="{{route('rooms.vote', ['id' => $room])}}">
+                                {{ $room->name }}
+                                </a>
+                            </li>
                         @endforeach
                     </ul>
                 </div>
