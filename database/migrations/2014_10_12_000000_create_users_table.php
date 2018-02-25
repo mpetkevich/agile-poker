@@ -18,7 +18,6 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->unsignedInteger('room')->unsigned()->default(0);
 
             /**
              * 0 - user
@@ -39,6 +38,7 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('user')->unsigned();
             $table->unsignedInteger('vote')->unsigned();
+            $table->unsignedInteger('room')->unsigned();
         });
 
     }

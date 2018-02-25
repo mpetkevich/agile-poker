@@ -29,7 +29,7 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                        <img src="{{asset('/images/llsoft.png')}}" alt="{{ config('app.name') }}" title="{{ config('app.name') }}" class="logo">
                     </a>
                 </div>
 
@@ -75,6 +75,9 @@
     </div>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
+
+    @section('footerScripts')
+        <script src="{{ asset('js/app.js') }}"></script>
+    @show
 </body>
 </html>
