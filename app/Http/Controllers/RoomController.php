@@ -46,31 +46,50 @@ class RoomController extends Controller
         $userId = Auth::id();
         $userRole = Auth::user()->role;
 
-        $vote = Vote::where(['room_id'=> $roomID, 'user_id'=>$userId])->first();
+        $vote = Vote::where(['room_id' => $roomID, 'user_id' => $userId])->first();
 
         $response = [];
-        if($vote){
+        if ($vote) {
             $response['vote'] = $vote->vote;
+            $response['room'] = Vote::where(['room_id' => $roomID])->with('user')->get();
         }
-        if($userRole == User::ROLE_ADMIN){
-            $response['room'] = Vote::where(['room_id'=> $roomID])->with('user')->get();
+        if ($userRole == User::ROLE_ADMIN) {
+            //  $response['room'] = Vote::where(['room_id'=> $roomID])->with('user')->get();
+            $response['admin'] = true;
         }
 
-        return 'aaa';//response()->json($response);
+        return response()->json($response);
     }
 
-    public function voteDataPost(Request $request)
+    public function clearVotesDataPost($roomID)
     {
 
-//        $validatedData = $request->validate([
-//            'title' => 'required|unique:posts|max:255',
-//            'body' => 'required',
-//        ]);
-//
-//        return response()->json([
-//            'name' => 'Abigail',
-//            'state' => 'CA'
-//        ]);
+        if (Auth::user()->role == User::ROLE_ADMIN) {
+            Vote::where(['room_id' => $roomID])->delete();
+        }
+
+        return $this->voteDataGet($roomID);
+    }
+
+    public function voteDataPost(Request $request ,$roomID)
+    {
+
+        $validatedData = $request->validate([
+            'vote' => 'required|numeric|max:10',
+        ]);
+
+        $userId = Auth::id();
+
+        $vote = Vote::where(['room_id' => $roomID, 'user_id' => $userId])->first();
+        if (!$vote) {
+            $newVote = new Vote();
+            $newVote->user_id =  $userId;
+            $newVote->room_id = $roomID;
+            $newVote->vote = $request->vote;
+            $newVote->save();
+        }
+
+        return $this->voteDataGet($roomID);
     }
 
 

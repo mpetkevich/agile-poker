@@ -33,5 +33,6 @@ Route::get('refresh_captcha', 'Auth\LoginController@refreshCaptcha')->name('refr
 Route::group(['prefix' => 'ajax'], function () {
     Route::get('/rooms/{id}/voteData', 'RoomController@voteDataGet')->where('id', '[0-9]+');
     Route::post('/rooms/{id}/voteData', 'RoomController@voteDataPost')->where('id', '[0-9]+');
+    Route::post('/rooms/{id}/clear', 'RoomController@clearVotesDataPost')->where('id', '[0-9]+');
 });
 
