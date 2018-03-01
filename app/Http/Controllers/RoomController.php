@@ -27,7 +27,7 @@ class RoomController extends Controller
      */
     public function index()
     {
-        return view('rooms.rooms')->with('rooms', Room::all());
+        return view('rooms.rooms')->with('rooms', Room::all())->with('isAdmin',User::isAdmin());
     }
 
     /**
@@ -53,10 +53,12 @@ class RoomController extends Controller
             $response['vote'] = $vote->vote;
             $response['room'] = Vote::where(['room_id' => $roomID])->with('user')->get();
         }
-        if ($userRole == User::ROLE_ADMIN) {
+        if (User::isAdmin()) {
             //  $response['room'] = Vote::where(['room_id'=> $roomID])->with('user')->get();
             $response['admin'] = true;
         }
+
+        $response['roomName'] = Room::find($roomID)->name;
 
         return response()->json($response);
     }
@@ -64,7 +66,7 @@ class RoomController extends Controller
     public function clearVotesDataPost($roomID)
     {
 
-        if (Auth::user()->role == User::ROLE_ADMIN) {
+        if (User::isAdmin()) {
             Vote::where(['room_id' => $roomID])->delete();
         }
 

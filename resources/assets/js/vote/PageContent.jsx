@@ -5,12 +5,16 @@ import objectAssign from 'object-assign';
 
 export default class PageContent extends React.PureComponent {
 
+    timerId;
+
     constructor(props) {
         super(props);
         this.state = {
+            initLoading: true,
             roomVotesList: [],
             myVote: null,
             admin: false,
+            roomName:'',
         };
 
         this.onClearRoom = this.onClearRoom.bind(this);
@@ -36,32 +40,42 @@ export default class PageContent extends React.PureComponent {
             },
             params
         );
+        clearTimeout(_this.timerId);
 
         fetch(url, fetchParams)
             .then(res => res.json())
             .then(json => {
-
-                let state = {};
+                let state = {initLoading: false};
                 if (typeof json.admin !== 'undefined') {
                     state.admin = json.admin;
                 }
-                if (typeof json.room !== 'undefined') {
-                    state.roomVotesList = json.room;
+                if (typeof json.roomName !== 'undefined') {
+                    state.roomName = json.roomName;
                 }
-                if (typeof json.vote !== 'undefined') {
-                    state.myVote = json.vote;
-                }
+                state.roomVotesList = typeof json.room !== 'undefined' ? json.room : null;
+                state.myVote = typeof json.vote !== 'undefined' ? json.vote : null;
                 _this.setState(state);
 
+                _this.timerId = setTimeout(function() {
+                    _this.fetchData('/ajax/rooms/' + _this.props.roomID + '/voteData');
+                }, 2000);
             });
     }
 
     onSetVote(vote) {
-        let body = {vote:vote};
-        this.fetchData('/ajax/rooms/' + this.props.roomID + '/voteData',{method: 'POST', body: JSON.stringify(body)});
+        this.setState({initLoading: true}, () => {
+            let body = {vote: vote};
+            this.fetchData('/ajax/rooms/' + this.props.roomID + '/voteData', {
+                method: 'POST',
+                body: JSON.stringify(body)
+            });
+        });
     }
+
     onClearRoom() {
-        this.fetchData('/ajax/rooms/' + this.props.roomID + '/clear',{method: 'POST'});
+        this.setState({initLoading: true}, () => {
+            this.fetchData('/ajax/rooms/' + this.props.roomID + '/clear', {method: 'POST'});
+        });
     }
 
 
@@ -75,7 +89,7 @@ export default class PageContent extends React.PureComponent {
 
         for (let i = 1; i <= 10; i++) {
             votes.push(<div key={i} className="col-md-3">
-                <button className="btn btn-default voteButton" onClick={this.onSetVote.bind(this,i)}>{i}</button>
+                <button className="btn btn-default voteButton" onClick={this.onSetVote.bind(this, i)}>{i}</button>
             </div>);
         }
 
@@ -87,7 +101,6 @@ export default class PageContent extends React.PureComponent {
     }
 
     renderVotes() {
-
         if (this.state.myVote === null) {
             return null;
         }
@@ -104,7 +117,7 @@ export default class PageContent extends React.PureComponent {
         total = Math.ceil(total / count);
         return (
             <div>
-                <div>Estimate <span>{total}</span></div>
+                <div>Total Estimate <b>{total}</b>, Count <b>{count}.</b></div>
                 {votesList}
             </div>
         );
@@ -119,7 +132,8 @@ export default class PageContent extends React.PureComponent {
         return (
             <div className="panel panel-default">
                 <div className="panel-body">
-                    <button type="button" className="btn btn-info" onClick={this.onClearRoom}>Clear room Estimate</button>
+                    <button type="button" className="btn btn-info" onClick={this.onClearRoom}>Clear room Estimate
+                    </button>
                 </div>
             </div>
         );
@@ -127,18 +141,31 @@ export default class PageContent extends React.PureComponent {
 
     render() {
 
+        if (this.state.initLoading) {
+            return <div className="spinner">
+                <div className="bounce1"/>
+                <div className="bounce2"/>
+                <div className="bounce3"/>
+            </div>;
+        }
+
         return (<div className="panel-body">
             <div className="container">
                 <div className="row">
                     <div className="col-md-8 col-md-offset-2">
                         <div className="panel panel-default">
-                            <div className="panel-heading">Vote Room {this.props.roomID}</div>
+                            <div className="panel-body">Room <b>{this.state.roomName}</b></div>
+                        </div>
+
+                        {this.renderAdminButtons()}
+
+                        <div className="panel panel-default">
                             <div className="panel-body">
                                 {this.renderVotes()}
                                 {this.renderVoteButtons()}
                             </div>
                         </div>
-                        {this.renderAdminButtons()}
+
                     </div>
                 </div>
             </div>
