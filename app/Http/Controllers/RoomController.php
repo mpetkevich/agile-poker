@@ -31,68 +31,57 @@ class RoomController extends Controller
     }
 
     /**
-     * Show the application dashboard.
-     *
-     * @param $roomID
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
-    public function vote($roomID)
+    public function newRoomGet()
     {
-        return view('rooms.vote')->with('roomID', $roomID);
-    }
-
-    public function voteDataGet($roomID)
-    {
-        $userId = Auth::id();
-        $userRole = Auth::user()->role;
-
-        $vote = Vote::where(['room_id' => $roomID, 'user_id' => $userId])->first();
-
-        $response = [];
-        if ($vote) {
-            $response['vote'] = $vote->vote;
-            $response['room'] = Vote::where(['room_id' => $roomID])->with('user')->get();
-        }
         if (User::isAdmin()) {
-            //  $response['room'] = Vote::where(['room_id'=> $roomID])->with('user')->get();
-            $response['admin'] = true;
+            return view('rooms.new');
         }
 
-        $response['roomName'] = Room::find($roomID)->name;
-
-        return response()->json($response);
+        return redirect()->route('rooms');
     }
 
-    public function clearVotesDataPost($roomID)
-    {
-
-        if (User::isAdmin()) {
-            Vote::where(['room_id' => $roomID])->delete();
-        }
-
-        return $this->voteDataGet($roomID);
-    }
-
-    public function voteDataPost(Request $request ,$roomID)
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function newRoomPost(Request $request)
     {
 
         $validatedData = $request->validate([
-            'vote' => 'required|numeric|max:10',
+            'name' => 'required|string|max:255',
         ]);
 
-        $userId = Auth::id();
-
-        $vote = Vote::where(['room_id' => $roomID, 'user_id' => $userId])->first();
-        if (!$vote) {
-            $newVote = new Vote();
-            $newVote->user_id =  $userId;
-            $newVote->room_id = $roomID;
-            $newVote->vote = $request->vote;
-            $newVote->save();
+        if (User::isAdmin()) {
+            $room = new Room();
+            $room->name = $validatedData['name'];
+            $room->save();
         }
 
-        return $this->voteDataGet($roomID);
+        return redirect()->route('rooms');
     }
 
+
+    public function deleteGet($roomID)
+    {
+        if (User::isAdmin()) {
+            $room = Room::find($roomID);
+            return view('rooms.delete')->with('room', $room);
+        }
+
+        return redirect()->route('rooms');
+    }
+
+    public function deletePost(Request $request,$roomID)
+    {
+        if (User::isAdmin()) {
+
+            $room = Room::find($roomID);
+            $room->delete();
+        }
+
+        return redirect()->route('rooms');
+    }
 
 }

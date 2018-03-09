@@ -54,3 +54,19 @@
 }
 
 // loader end
+
+%room-action{
+  cursor: pointer;
+  color: #CCCCCC;
+  &:hover{
+    color: black;
+  }
+}
+
+.room-delete{
+ @extend %room-action;
+}
+.room-add{
+  @extend %room-action;
+  margin-right: 15px;
+}
