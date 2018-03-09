@@ -27,6 +27,9 @@ Route::get('/home', function () {
 //Route::get('/home', 'HomeController@index')->name('home');
 Route::get('refresh_captcha', 'Auth\LoginController@refreshCaptcha')->name('refresh_captcha');
 
+Route::get('/users', 'UsersController@index')->name('users');
+
+
 Route::get('/rooms', 'RoomController@index')->name('rooms');
 Route::get('/rooms/new', 'RoomController@newRoomGet')->name('rooms.new');
 Route::post('/rooms/new', 'RoomController@newRoomPost');
