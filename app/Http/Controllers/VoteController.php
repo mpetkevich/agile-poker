@@ -43,7 +43,9 @@ class VoteController extends Controller
             $response['vote'] = $vote->vote;
             $response['room'] = Vote::where(['room_id' => $roomID])->with('user')->get();
         }
-        if (User::isAdmin()) {
+
+        $room = Room::find($roomID);
+        if (User::isAdmin() || $room->user == Auth::user()) {
             //  $response['room'] = Vote::where(['room_id'=> $roomID])->with('user')->get();
             $response['admin'] = true;
         }
@@ -55,8 +57,8 @@ class VoteController extends Controller
 
     public function clearVotesDataPost($roomID)
     {
-
-        if (User::isAdmin()) {
+        $room = Room::find($roomID);
+        if (User::isAdmin() || $room->user == Auth::user()) {
             Vote::where(['room_id' => $roomID])->delete();
         }
 

@@ -13,18 +13,16 @@
                                     <a href="{{route('rooms.vote', ['id' => $room])}}">
                                         {{ $room->name }}
                                     </a>
-                                    @if ($isAdmin)
+                                    (owner <b>{{$room->user->name}}</b>)
+                                    @if ($isAdmin || $room->user == $user)
                                         <span class="pull-right"><a href="{{ route('rooms.delete',['id'=> $room]) }}"><span class="glyphicon glyphicon-minus-sign room-delete" aria-hidden="true"></span></a></span>
                                     @endif
                                 </li>
                             @endforeach
                         </ul>
-                        @if ($isAdmin)
                             <div>
                                 <div class="pull-right"><a href="{{ route('rooms.new') }}"><span class="glyphicon glyphicon-plus-sign room-add" aria-hidden="true"></span></a></div>
                             </div>
-                        @endif
-
                     </div>
                 </div>
             </div>

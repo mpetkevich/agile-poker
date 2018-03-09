@@ -11,4 +11,9 @@ class Room extends Model
     protected $fillable = [
         'name',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
 }

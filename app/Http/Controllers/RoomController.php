@@ -27,7 +27,10 @@ class RoomController extends Controller
      */
     public function index()
     {
-        return view('rooms.rooms')->with('rooms', Room::all())->with('isAdmin',User::isAdmin());
+        return view('rooms.rooms')->
+        with('rooms', Room::all())->
+        with('isAdmin', User::isAdmin())->
+        with('user', Auth::user());
     }
 
     /**
@@ -35,11 +38,7 @@ class RoomController extends Controller
      */
     public function newRoomGet()
     {
-        if (User::isAdmin()) {
-            return view('rooms.new');
-        }
-
-        return redirect()->route('rooms');
+        return view('rooms.new');
     }
 
     /**
@@ -48,36 +47,42 @@ class RoomController extends Controller
      */
     public function newRoomPost(Request $request)
     {
-
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
         ]);
 
-        if (User::isAdmin()) {
-            $room = new Room();
-            $room->name = $validatedData['name'];
-            $room->save();
-        }
+        $room = new Room();
+        $room->name = $validatedData['name'];
+        $room->user_id = Auth::id();
+        $room->save();
 
         return redirect()->route('rooms');
     }
 
-
+    /**
+     * @param $roomID
+     * @return $this|\Illuminate\Http\RedirectResponse
+     */
     public function deleteGet($roomID)
     {
-        if (User::isAdmin()) {
-            $room = Room::find($roomID);
+        $room = Room::find($roomID);
+
+        if (User::isAdmin() || $room->user == Auth::user()) {
             return view('rooms.delete')->with('room', $room);
         }
 
         return redirect()->route('rooms');
     }
 
-    public function deletePost(Request $request,$roomID)
+    /**
+     * @param Request $request
+     * @param $roomID
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function deletePost(Request $request, $roomID)
     {
-        if (User::isAdmin()) {
-
-            $room = Room::find($roomID);
+        $room = Room::find($roomID);
+        if (User::isAdmin() || $room->user == Auth::user()) {
             $room->delete();
         }
 

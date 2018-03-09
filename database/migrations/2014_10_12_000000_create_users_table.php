@@ -31,6 +31,7 @@ class CreateUsersTable extends Migration
 
         Schema::create('rooms', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('user_id')->unsigned();
             $table->string('name');
         });
 
