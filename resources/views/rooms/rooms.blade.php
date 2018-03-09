@@ -14,7 +14,7 @@
                                         {{ $room->name }}
                                     </a>
                                     (owner <b>{{$room->user->name}}</b>)
-                                    @if ($isAdmin || $room->user == $user)
+                                    @if (\App\User::isAdmin() || $room->user == $user)
                                         <span class="pull-right"><a href="{{ route('rooms.delete',['id'=> $room]) }}"><span class="glyphicon glyphicon-minus-sign room-delete" aria-hidden="true"></span></a></span>
                                     @endif
                                 </li>

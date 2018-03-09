@@ -29,7 +29,6 @@ class RoomController extends Controller
     {
         return view('rooms.rooms')->
         with('rooms', Room::all())->
-        with('isAdmin', User::isAdmin())->
         with('user', Auth::user());
     }
 
