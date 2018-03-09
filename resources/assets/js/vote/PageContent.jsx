@@ -109,16 +109,22 @@ export default class PageContent extends React.PureComponent {
         let total = 0;
         let votesList = this.state.roomVotesList.map((vote) => {
             total += vote.vote;
-            return (<div key={vote.id}>
-                {vote.user.name} {vote.vote}
-            </div>);
+
+            return <li key={vote.id} className="list-group-item">
+                    <span className="badge">{vote.vote}</span>
+                {vote.user.name}
+            </li>;
+
         });
 
         total = Math.ceil(total / count);
         return (
             <div>
                 <div>Total Estimate <b>{total}</b>, Count <b>{count}.</b></div>
+                <br/>
+                <ul className="list-group">
                 {votesList}
+                </ul>
             </div>
         );
     }
