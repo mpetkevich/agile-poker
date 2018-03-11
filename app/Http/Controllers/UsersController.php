@@ -34,57 +34,74 @@ class UsersController extends Controller
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
-    public function newRoomGet()
+    public function newUserGet()
     {
-        return view('rooms.new');
+
+        return view('users.edit')->with('user', new User());
+    }
+    public function newUserPost( Request $request, $id)
+    {
+
+        return redirect()->route('users');
     }
 
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function newRoomPost(Request $request)
+    public function editUserGet($id)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
-
-        $room = new Room();
-        $room->name = $validatedData['name'];
-        $room->user_id = Auth::id();
-        $room->save();
-
-        return redirect()->route('rooms');
+        return view('users.edit')->with('user', User::find($id));
     }
 
-    /**
-     * @param $roomID
-     * @return $this|\Illuminate\Http\RedirectResponse
-     */
-    public function deleteGet($roomID)
+    public function editUserPost( Request $request, $id)
     {
-        $room = Room::find($roomID);
 
-        if (User::isAdmin() || $room->user == Auth::user()) {
-            return view('rooms.delete')->with('room', $room);
-        }
-
-        return redirect()->route('rooms');
+        return redirect()->route('users');
     }
 
-    /**
-     * @param Request $request
-     * @param $roomID
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function deletePost(Request $request, $roomID)
-    {
-        $room = Room::find($roomID);
-        if (User::isAdmin() || $room->user == Auth::user()) {
-            $room->delete();
-        }
-
-        return redirect()->route('rooms');
-    }
+//    /**
+//     * @param Request $request
+//     * @return \Illuminate\Http\RedirectResponse
+//     */
+//    public function newUserPost(Request $request)
+//    {
+//        $validatedData = $request->validate([
+//            'name' => 'required|string|max:255',
+//        ]);
+//
+//        $room = new Room();
+//        $room->name = $validatedData['name'];
+//        $room->user_id = Auth::id();
+//        $room->save();
+//
+//        return redirect()->route('rooms');
+//    }
+//
+//    /**
+//     * @param $roomID
+//     * @return $this|\Illuminate\Http\RedirectResponse
+//     */
+//    public function deleteGet($roomID)
+//    {
+//        $room = Room::find($roomID);
+//
+//        if (User::isAdmin() || $room->user == Auth::user()) {
+//            return view('rooms.delete')->with('room', $room);
+//        }
+//
+//        return redirect()->route('rooms');
+//    }
+//
+//    /**
+//     * @param Request $request
+//     * @param $roomID
+//     * @return \Illuminate\Http\RedirectResponse
+//     */
+//    public function deletePost(Request $request, $roomID)
+//    {
+//        $room = Room::find($roomID);
+//        if (User::isAdmin() || $room->user == Auth::user()) {
+//            $room->delete();
+//        }
+//
+//        return redirect()->route('rooms');
+//    }
 
 }

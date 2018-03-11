@@ -10,17 +10,17 @@
                         <ul class="list-group">
                             @foreach ($users as $user)
                                 <li class="list-group-item">
-                                    <a href="{{route('rooms.vote', ['id' => $user])}}">
+                                    <a href="{{route('users.edit', ['id' => $user])}}">
                                         {{ $user->name }}
                                     </a>
 
-                                        <span class="pull-right"><a href="{{ route('rooms.delete',['id'=> $user]) }}"><span class="glyphicon glyphicon-minus-sign room-delete" aria-hidden="true"></span></a></span>
+                                        <span class="pull-right"><a href="{{ route('users.delete',['id'=> $user]) }}"><span class="glyphicon glyphicon-minus-sign room-delete" aria-hidden="true"></span></a></span>
 
                                 </li>
                             @endforeach
                         </ul>
                             <div>
-                                <div class="pull-right"><a href="{{ route('rooms.new') }}"><span class="glyphicon glyphicon-plus-sign room-add" aria-hidden="true"></span></a></div>
+                                <div class="pull-right"><a href="{{ route('users.new') }}"><span class="glyphicon glyphicon-plus-sign room-add" aria-hidden="true"></span></a></div>
                             </div>
                     </div>
                 </div>

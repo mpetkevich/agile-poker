@@ -27,7 +27,16 @@ Route::get('/home', function () {
 //Route::get('/home', 'HomeController@index')->name('home');
 Route::get('refresh_captcha', 'Auth\LoginController@refreshCaptcha')->name('refresh_captcha');
 
+
 Route::get('/users', 'UsersController@index')->name('users');
+Route::get('/users/new', 'UsersController@newUserGet')->name('users.new');
+Route::post('/users/new', 'UsersController@newUserPost');
+Route::get('/users/{id}', 'UsersController@editUserGet')->name('users.edit')->where('id', '[0-9]+');
+Route::post('/users/{id}', 'UsersController@editUserPost')->where('id', '[0-9]+');
+Route::get('/users/{id}/delete', 'UsersController@editUserPost')->name('users.delete')->where('id', '[0-9]+');
+Route::post('/users/{id}/delete', 'UsersController@editUserPost')->where('id', '[0-9]+');
+
+
 
 
 Route::get('/rooms', 'RoomController@index')->name('rooms');
