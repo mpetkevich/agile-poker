@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Settings;
 use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -58,11 +59,15 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return \App\User
+     * @throws \Exception
      */
     protected function create(array $data)
     {
+        if( ! Settings::get('userSelfRegisterAllowed', true) ){
+            throw new \Exception('User Self Register is not allowed');
+        }
 
         $role = User::ROLE_USER;
 
@@ -78,4 +83,13 @@ class RegisterController extends Controller
             'role' => $role,
         ]);
     }
+
+    public function showRegistrationForm()
+    {
+        if( ! Settings::get('userSelfRegisterAllowed', true) ){
+            return redirect()->route('login');
+        }
+        return view('auth.register');
+    }
+
 }

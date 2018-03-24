@@ -44,7 +44,9 @@
                     <!-- Authentication Links -->
                     @guest
                         <li><a href="{{ route('login') }}">Login</a></li>
-                        <li><a href="{{ route('register') }}">Register</a></li>
+                        @if(App\Settings::get('userSelfRegisterAllowed', true))
+                            <li><a href="{{ route('register') }}">Register</a></li>
+                        @endif
                     @else
                         <li><a href="{{ route('rooms') }}">Rooms</a></li>
                         <li class="dropdown">

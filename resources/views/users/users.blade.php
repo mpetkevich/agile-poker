@@ -10,14 +10,18 @@
                     <div class="panel-body">
                         <form class="form-horizontal" method="POST" action="">
                             {{ csrf_field() }}
-
                             <div class="form-group">
-                                <label for="user-register" class="col-md-4 control-label">User self register</label>
+                                <label for="user-self-register-allowed" class="col-md-4 control-label">User self register</label>
                                 <div class="col-md-6">
-                                    <label class="switch">
-                                        <input id="user-register" name="user-register" type="checkbox" @if(1) checked @endif>
-                                        <span class="slider round"></span>
-                                    </label>
+                                    <select id="user-self-register-allowed" name="user-self-register-allowed" class="form-control">
+                                        <option value="1" @if(App\Settings::get('userSelfRegisterAllowed', true)) selected @endif >On</option>
+                                        <option value="0" @if(!App\Settings::get('userSelfRegisterAllowed', true)) selected @endif >Off</option>
+                                    </select>
+                                    @if ($errors->has('user-self-register-allowed'))
+                                        <span class="help-block">
+                                        <strong>{{ $errors->first('user-self-register-allowed') }}</strong>
+                                    </span>
+                                    @endif
                                 </div>
                             </div>
                             <div class="form-group">

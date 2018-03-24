@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Room;
+use App\Settings;
 use App\User;
 use App\Vote;
 use Illuminate\Http\Request;
@@ -28,8 +29,36 @@ class UsersController extends Controller
      */
     public function index()
     {
-     //   Settings::get('foo', 'default value');
         return view('users.users')->with('users', User::all());
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function indexPost(Request $request)
+    {
+        $validatedData = $request->validate([
+            'user-self-register-allowed' => 'boolean',
+        ]);
+
+        Settings::set('userSelfRegisterAllowed', $validatedData['user-self-register-allowed'] === '1' );
+        Settings::save();
+
+//        $userId = Auth::id();
+//
+//        $vote = Vote::where(['room_id' => $roomID, 'user_id' => $userId])->first();
+//        if (!$vote) {
+//            $newVote = new Vote();
+//            $newVote->user_id =  $userId;
+//            $newVote->room_id = $roomID;
+//            $newVote->vote = $validatedData['vote'];
+//            $newVote->save();
+//        }
+
+        return $this->index();
+
+
     }
 
     /**
