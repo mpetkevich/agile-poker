@@ -28,6 +28,7 @@ class UsersController extends Controller
      */
     public function index()
     {
+     //   Settings::get('foo', 'default value');
         return view('users.users')->with('users', User::all());
     }
 
