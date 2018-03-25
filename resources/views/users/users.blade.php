@@ -35,31 +35,44 @@
                     </div>
                 </div>
 
-
                 <div class="panel panel-default">
-                    <div class="panel-heading">Users</div>
                     <div class="panel-body">
-                        <ul class="list-group">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th colspan="3">
+                                    Users
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
                             @foreach ($users as $user)
-                                <li class="list-group-item">
-                                    <a href="{{route('users.edit', ['id' => $user])}}">
-                                        {{ $user->name }}
-                                    </a>
-
-                                    <span class="pull-right"><a href="{{ route('users.delete',['id'=> $user]) }}"><span class="glyphicon glyphicon-minus-sign room-delete" aria-hidden="true"></span></a></span>
-
-                                </li>
+                                <tr>
+                                    <td>
+                                        <a href="{{route('users.edit', ['id' => $user])}}">
+                                            {{ $user->name }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        @if($user->role == \App\User::ROLE_ADMIN )
+                                            <span class="badge">admin</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <span class="pull-right"><a href="{{ route('users.delete',['id'=> $user]) }}"><span class="glyphicon glyphicon-minus-sign item-delete" aria-hidden="true"></span></a></span>
+                                    </td>
+                                </tr>
                             @endforeach
-                        </ul>
-                        <div>
-                            <div class="pull-right"><a href="{{ route('users.new') }}"><span class="glyphicon glyphicon-plus-sign room-add" aria-hidden="true"></span></a></div>
-                        </div>
+                            <tr>
+                                <td colspan="3">
+                                    <div class="pull-right"><a href="{{ route('users.new') }}"><span class="glyphicon glyphicon-plus-sign item-add" aria-hidden="true"></span></a></div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-
-
             </div>
-
         </div>
     </div>
     </div>

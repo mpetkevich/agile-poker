@@ -55,7 +55,7 @@
 
 // loader end
 
-%room-action{
+%item-action{
   cursor: pointer;
   color: #CCCCCC;
   &:hover{
@@ -63,11 +63,10 @@
   }
 }
 
-.room-delete{
- @extend %room-action;
+.item-delete{
+ @extend %item-action;
 }
-.room-add{
-  @extend %room-action;
-  margin-right: 15px;
+.item-add{
+  @extend %item-action;
 }
 
