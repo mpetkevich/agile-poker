@@ -11,7 +11,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ url(mix('css/app.css')) }}" rel="stylesheet">
 </head>
 <body>
 <div id="app">
@@ -88,7 +88,7 @@
 <!-- Scripts -->
 
 @section('footerScripts')
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ url(mix('js/app.js')) }}"></script>
 @show
 </body>
 </html>

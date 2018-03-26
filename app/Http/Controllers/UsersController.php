@@ -6,6 +6,7 @@ use App\Room;
 use App\Settings;
 use App\User;
 use App\Vote;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -54,7 +55,7 @@ class UsersController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     * @return \Illuminate\Contracts\View\Factory|RedirectResponse|\Illuminate\View\View
      */
     public function newUserGet()
     {
@@ -62,6 +63,10 @@ class UsersController extends Controller
         return view('users.edit')->with('user', new User());
     }
 
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
     public function newUserPost(Request $request)
     {
         $validatedData = $request->validate([
@@ -84,63 +89,69 @@ class UsersController extends Controller
         return redirect()->route('users');
     }
 
+    /**
+     * @param $id
+     * @return $this
+     */
     public function editUserGet($id)
     {
         return view('users.edit')->with('user', User::find($id));
     }
 
+    /**
+     * @param Request $request
+     * @param $id
+     * @return RedirectResponse
+     */
     public function editUserPost(Request $request, $id)
     {
+        $validatedData = $request->validate([
+            'name' => 'string|max:255',
+            'email' => 'string|email|max:255|unique:users,email,'.$id,
+            'password' => 'nullable|string|min:6|confirmed',
+            'role' => 'integer',
+        ]);
+
+        $user = User::find($id);
+
+        if ($user) {
+            $user->name = $validatedData['name'];
+            $user->email = $validatedData['email'];
+            if ($validatedData['password']) {
+                $user->password = bcrypt($validatedData['password']);
+            }
+            $user->role = $validatedData['role'];
+            $user->save();
+        }
 
         return redirect()->route('users');
     }
 
-//    /**
-//     * @param Request $request
-//     * @return \Illuminate\Http\RedirectResponse
-//     */
-//    public function newUserPost(Request $request)
-//    {
-//        $validatedData = $request->validate([
-//            'name' => 'required|string|max:255',
-//        ]);
-//
-//        $room = new Room();
-//        $room->name = $validatedData['name'];
-//        $room->user_id = Auth::id();
-//        $room->save();
-//
-//        return redirect()->route('rooms');
-//    }
-//
-//    /**
-//     * @param $roomID
-//     * @return $this|\Illuminate\Http\RedirectResponse
-//     */
-//    public function deleteGet($roomID)
-//    {
-//        $room = Room::find($roomID);
-//
-//        if (User::isAdmin() || $room->user == Auth::user()) {
-//            return view('rooms.delete')->with('room', $room);
-//        }
-//
-//        return redirect()->route('rooms');
-//    }
-//
-//    /**
-//     * @param Request $request
-//     * @param $roomID
-//     * @return \Illuminate\Http\RedirectResponse
-//     */
-//    public function deletePost(Request $request, $roomID)
-//    {
-//        $room = Room::find($roomID);
-//        if (User::isAdmin() || $room->user == Auth::user()) {
-//            $room->delete();
-//        }
-//
-//        return redirect()->route('rooms');
-//    }
+    /**
+     * @param $id
+     * @return $this|RedirectResponse
+     */
+    public function deleteGet($id)
+    {
+        if (User::isAdmin()) {
+            return view('users.delete')->with('user', User::find($id));
+        }
+
+        return redirect()->route('users');
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return RedirectResponse
+     */
+    public function deletePost(Request $request, $id)
+    {
+        if (User::isAdmin() && Auth::id() != $id) {
+            $user = User::find($id);
+            $user->delete();
+        }
+        return redirect()->route('users');
+    }
 
 }

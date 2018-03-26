@@ -33,8 +33,8 @@ Route::get('/users/new', 'UsersController@newUserGet')->name('users.new');
 Route::post('/users/new', 'UsersController@newUserPost');
 Route::get('/users/{id}', 'UsersController@editUserGet')->name('users.edit')->where('id', '[0-9]+');
 Route::post('/users/{id}', 'UsersController@editUserPost')->where('id', '[0-9]+');
-Route::get('/users/{id}/delete', 'UsersController@editUserPost')->name('users.delete')->where('id', '[0-9]+');
-Route::post('/users/{id}/delete', 'UsersController@editUserPost')->where('id', '[0-9]+');
+Route::get('/users/{id}/delete', 'UsersController@deleteGet')->name('users.delete')->where('id', '[0-9]+');
+Route::post('/users/{id}/delete', 'UsersController@deletePost')->where('id', '[0-9]+');
 
 
 Route::get('/rooms', 'RoomController@index')->name('rooms');

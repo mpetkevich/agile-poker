@@ -41,12 +41,11 @@ class VoteController extends Controller
         $response = [];
         if ($vote) {
             $response['vote'] = $vote->vote;
-            $response['room'] = Vote::where(['room_id' => $roomID])->with('user')->get();
+            $response['room'] = Vote::where(['room_id' => $roomID])->has('user')->with('user')->get();
         }
 
         $room = Room::find($roomID);
         if (User::isAdmin() || $room->user == Auth::user()) {
-            //  $response['room'] = Vote::where(['room_id'=> $roomID])->with('user')->get();
             $response['admin'] = true;
         }
 

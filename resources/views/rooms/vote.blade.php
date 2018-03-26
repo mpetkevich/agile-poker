@@ -6,5 +6,5 @@
 
 @section('footerScripts')
     @parent
-    <script src="{{ asset('js/vote.js') }}"></script>
+    <script src="{{ url(mix('js/vote.js')) }}"></script>
 @endsection

@@ -138,7 +138,7 @@ export default class PageContent extends React.PureComponent {
         return (
             <div className="panel panel-default">
                 <div className="panel-body">
-                    <button type="button" className="btn btn-info" onClick={this.onClearRoom}>Clear room Estimate
+                    <button type="button" className="btn btn-info" onClick={this.onClearRoom}>Clear Estimates in Room
                     </button>
                 </div>
             </div>

@@ -14,7 +14,12 @@ let mix = require('laravel-mix');
 mix
     .js('resources/assets/js/app.js', 'public/js')
     .react('resources/assets/js/vote', 'public/js')
-    .sass('resources/assets/sass/app.scss', 'public/css');
+    .sass('resources/assets/sass/app.scss', 'public/css')
+    .version([
+        'public/js/app.js',
+        'public/js/vote.js',
+        'public/css/app.css'
+    ]);
 
 if (!mix.inProduction()) {
     mix.sourceMaps();
