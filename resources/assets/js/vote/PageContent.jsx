@@ -1,6 +1,5 @@
 import React from 'react';
 import fetch from 'node-fetch';
-import FormData from 'form-data';
 import objectAssign from 'object-assign';
 
 export default class PageContent extends React.PureComponent {
@@ -14,7 +13,7 @@ export default class PageContent extends React.PureComponent {
             roomVotesList: [],
             myVote: null,
             admin: false,
-            roomName:'',
+            roomName: '',
         };
 
         this.onClearRoom = this.onClearRoom.bind(this);
@@ -56,7 +55,7 @@ export default class PageContent extends React.PureComponent {
                 state.myVote = typeof json.vote !== 'undefined' ? json.vote : null;
                 _this.setState(state);
 
-                _this.timerId = setTimeout(function() {
+                _this.timerId = setTimeout(function () {
                     _this.fetchData('/ajax/rooms/' + _this.props.roomID + '/voteData');
                 }, 2000);
             });
@@ -87,6 +86,10 @@ export default class PageContent extends React.PureComponent {
 
         let votes = [];
 
+        votes.push(<div key="pass" className="col-md-3">
+            <button className="btn btn-default voteButton" onClick={this.onSetVote.bind(this, 0)}>Pass</button>
+        </div>);
+
         for (let i = 1; i <= 10; i++) {
             votes.push(<div key={i} className="col-md-3">
                 <button className="btn btn-default voteButton" onClick={this.onSetVote.bind(this, i)}>{i}</button>
@@ -105,25 +108,41 @@ export default class PageContent extends React.PureComponent {
             return null;
         }
 
-        let count = this.state.roomVotesList.length;
-        let total = 0;
+        let voteCount = this.state.roomVotesList.length,
+            total = 0,
+            calcCount = 0;
+
         let votesList = this.state.roomVotesList.map((vote) => {
             total += vote.vote;
-
+            if (vote.vote) {
+                calcCount++;
+            }
             return <li key={vote.id} className="list-group-item">
-                    <span className="badge">{vote.vote}</span>
+                <span className="badge">{vote.vote ? vote.vote : 'pass'}</span>
                 {vote.user.name}
             </li>;
-
         });
 
-        total = Math.ceil(total / count);
+        let estimate = total / calcCount;
         return (
             <div>
-                <div>Total Estimate <b>{total}</b>, Count <b>{count}.</b></div>
-                <br/>
+                <div className="panel panel-default">
+                    <div className="panel-body">
+                        <div className="row">
+                            <div className="col-md-6">
+                                Estimate ceil: <strong className="h4 text-success">{Math.ceil(estimate)}</strong>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-md-6">
+                                Estimate round: <strong className="h4 text-success">{Math.round(estimate)}</strong> ({estimate.toFixed(2)})
+                            </div>
+                            <div className="col-md-6 text-right ">Number of votes: <strong className="h4 text-primary">{voteCount}</strong></div>
+                        </div>
+                    </div>
+                </div>
                 <ul className="list-group">
-                {votesList}
+                    {votesList}
                 </ul>
             </div>
         );
