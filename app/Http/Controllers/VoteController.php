@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Card;
 use App\Room;
 use App\User;
 use App\Vote;
@@ -29,7 +30,9 @@ class VoteController extends Controller
      */
     public function vote($roomID)
     {
-        return view('rooms.vote')->with('roomID', $roomID);
+        $cards =  Card::orderBy('value')->get();
+        $cards = json_encode($cards, JSON_UNESCAPED_SLASHES );
+        return view('rooms.vote')->with('roomID', $roomID)->with('cards',$cards);
     }
 
     public function voteDataGet($roomID)
@@ -68,7 +71,7 @@ class VoteController extends Controller
     {
 
         $validatedData = $request->validate([
-            'vote' => 'required|numeric|max:10',
+            'vote' => 'required|numeric',
         ]);
 
         $userId = Auth::id();

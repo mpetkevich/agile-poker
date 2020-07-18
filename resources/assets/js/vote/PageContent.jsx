@@ -4,8 +4,6 @@ import objectAssign from 'object-assign';
 
 export default class PageContent extends React.PureComponent {
 
-    timerId;
-
     constructor(props) {
         super(props);
         this.state = {
@@ -15,7 +13,7 @@ export default class PageContent extends React.PureComponent {
             admin: false,
             roomName: '',
         };
-
+        this.timerId = null;
         this.onClearRoom = this.onClearRoom.bind(this);
     }
 
@@ -55,9 +53,14 @@ export default class PageContent extends React.PureComponent {
                 state.myVote = typeof json.vote !== 'undefined' ? json.vote : null;
                 _this.setState(state);
 
+                let timeOut = 10000;
+                if (state.myVote !== null) {
+                    timeOut = 2000;
+                }
+
                 _this.timerId = setTimeout(function () {
                     _this.fetchData('/ajax/rooms/' + _this.props.roomID + '/voteData');
-                }, 2000);
+                }, timeOut);
             });
     }
 
@@ -84,16 +87,20 @@ export default class PageContent extends React.PureComponent {
             return null;
         }
 
+        let this_ = this;
         let votes = [];
 
         votes.push(<div key="pass" className="col-md-3">
             <button className="btn btn-default voteButton" onClick={this.onSetVote.bind(this, 0)}>Pass</button>
         </div>);
 
-        for (let i = 1; i <= 10; i++) {
-            votes.push(<div key={i} className="col-md-3">
-                <button className="btn btn-default voteButton" onClick={this.onSetVote.bind(this, i)}>{i}</button>
-            </div>);
+        if(window.agileCards && Array.isArray(window.agileCards)){
+            window.agileCards.every(function(element){
+                votes.push(<div key={element.value} className="col-md-3">
+                    <button className="btn btn-default voteButton" onClick={this_.onSetVote.bind(this_, element.value)}>{element.value}</button>
+                </div>);
+                return true;
+            });
         }
 
         return (
@@ -128,11 +135,6 @@ export default class PageContent extends React.PureComponent {
             <div>
                 <div className="panel panel-default">
                     <div className="panel-body">
-                        <div className="row">
-                            <div className="col-md-6">
-                                Estimate ceil: <strong className="h4 text-success">{Math.ceil(estimate)}</strong>
-                            </div>
-                        </div>
                         <div className="row">
                             <div className="col-md-6">
                                 Estimate round: <strong className="h4 text-success">{Math.round(estimate)}</strong> ({estimate.toFixed(2)})

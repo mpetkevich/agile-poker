@@ -6,5 +6,8 @@
 
 @section('footerScripts')
     @parent
+    <script>
+        window.agileCards = {!! $cards !!};
+    </script>
     <script src="{{ url(mix('js/vote.js')) }}"></script>
 @endsection
