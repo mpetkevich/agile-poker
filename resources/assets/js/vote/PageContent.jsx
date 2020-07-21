@@ -1,6 +1,13 @@
 import React from 'react';
 import fetch from 'node-fetch';
 import objectAssign from 'object-assign';
+import {fibCeil, fibFloor} from './fibonacci';
+
+const label = {
+    fontSize:18,
+    fontWeight:700
+}
+
 
 export default class PageContent extends React.PureComponent {
 
@@ -53,9 +60,9 @@ export default class PageContent extends React.PureComponent {
                 state.myVote = typeof json.vote !== 'undefined' ? json.vote : null;
                 _this.setState(state);
 
-                let timeOut = 10000;
+                let timeOut = 30000;
                 if (state.myVote !== null) {
-                    timeOut = 2000;
+                    timeOut = 2500;
                 }
 
                 _this.timerId = setTimeout(function () {
@@ -94,8 +101,8 @@ export default class PageContent extends React.PureComponent {
             <button className="btn btn-default voteButton" onClick={this.onSetVote.bind(this, 0)}>Pass</button>
         </div>);
 
-        if(window.agileCards && Array.isArray(window.agileCards)){
-            window.agileCards.every(function(element){
+        if (window.agileCards && Array.isArray(window.agileCards)) {
+            window.agileCards.every(function (element) {
                 votes.push(<div key={element.value} className="col-md-3">
                     <button className="btn btn-default voteButton" onClick={this_.onSetVote.bind(this_, element.value)}>{element.value}</button>
                 </div>);
@@ -137,10 +144,11 @@ export default class PageContent extends React.PureComponent {
                     <div className="panel-body">
                         <div className="row">
                             <div className="col-md-6">
-                                Estimate round: <strong className="h4 text-success">{Math.round(estimate)}</strong> ({estimate.toFixed(2)})
+                                Estimate round: <span className="text-success" style={label}>{Math.round(estimate)}</span> ({estimate.toFixed(2)})
                             </div>
-                            <div className="col-md-6 text-right ">Number of votes: <strong className="h4 text-primary">{voteCount}</strong></div>
+                            <div className="col-md-6 text-right ">Number of votes: <span className="text-primary" style={label}>{voteCount}</span></div>
                         </div>
+                        {this.renderFibonacci(estimate)}
                     </div>
                 </div>
                 <ul className="list-group">
@@ -148,6 +156,26 @@ export default class PageContent extends React.PureComponent {
                 </ul>
             </div>
         );
+    }
+
+    renderFibonacci(estimate) {
+        let fFloor = fibFloor(estimate);
+        if( estimate == fFloor ){
+            return null;
+        }
+        let fCeil = fibCeil(estimate);
+        return (<div className="row">
+            <div className="col-md-6">
+                Nearest Fibonacci numbers:
+            </div>
+            <div className="col-md-6 text-right ">
+                <span className="text-info" style={label}>{fFloor}</span>&nbsp;
+                {(estimate - fFloor).toFixed(2)}&nbsp;
+                <span className="text-success" style={label}>{estimate.toFixed(2)}</span>&nbsp;
+                {(fCeil - estimate).toFixed(2)}&nbsp;
+                <span className="text-info" style={label}>{fCeil}</span>
+            </div>
+        </div>);
     }
 
     renderAdminButtons() {

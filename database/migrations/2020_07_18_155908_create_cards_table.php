@@ -31,7 +31,7 @@ class CreateCardsTable extends Migration
                 ['value' => 34],
                 ['value' => 55],
                 ['value' => 89]
-                ]
+            ]
         );
     }
 
